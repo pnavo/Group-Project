@@ -1,3 +1,17 @@
+ 
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBSk349ZdonVa8deEG0mnYiWtDIW_WNBV0",
+    authDomain: "pick-up-game-f59ca.firebaseapp.com",
+    databaseURL: "https://pick-up-game-f59ca.firebaseio.com",
+    projectId: "pick-up-game-f59ca",
+    storageBucket: "",
+    messagingSenderId: "477205336108"
+  };
+  firebase.initializeApp(config);
+
+
+
 (function () {
 
   var bv = new Bideo();
