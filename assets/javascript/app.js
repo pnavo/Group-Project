@@ -51,7 +51,7 @@ function getList(listURL) {
   		url: listURL,
   		method: "GET"
   	}).done(function(response){
-  		debugger;
+  		
   		console.log(response);
   		var resultsDiv = $("<div>")
   		var results = response.results
@@ -107,6 +107,7 @@ $('#submit').on('click', function(event){
 		//convert geo location address to coordinates 
   		coordinates = response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng;
   	});
+  });
 		//pull information from firebase 
 
 	//compare and see if there are games nearby
