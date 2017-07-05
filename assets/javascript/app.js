@@ -106,7 +106,8 @@ $('#submit').on('click', function(event){
   		console.log(response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng);
 		//convert geo location address to coordinates 
   		coordinates = response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng;
-  	});
+  	})
+});
 		//pull information from firebase 
 
 	//compare and see if there are games nearby
