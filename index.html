@@ -2,9 +2,134 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+	<title>Pick Up Game</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+	<script src="https://use.typekit.net/nlq1kdt.js"></script>
+	<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
 </head>
 <body>
-	
+  <div id="container">
+    <video id="background_video" loop muted></video>
+    <div id="video_cover"></div>
+    <div id="overlay"></div>
+
+    <div id="video_controls">
+      <span id="play">
+        <img src="play.png">
+      </span>
+      <span id="pause">
+        <img src="pause.png">
+      </span>
+    </div>
+
+    <section id="main_content">
+    <div class="row">
+      <div class="col-lg-12">
+        
+
+        </div>
+
+    </div>
+      <div id="head">
+        <h1>Pick Up Games</h1>
+        <p class="sub_head">Pick Up Games brings together sports enthusiasts who want to organize or find casual games around them.</p>
+      </div>
+
+      <div id="links">
+<!--    <input type="text" id="phone">
+        <input type="submit" id="submit"> -->
+        <a href="#" id='find'>Find a game</a>
+        <a href="#" id="organize">Organize a game</a>
+        <form>
+          <input type="text" id="address">
+          <input type="submit" id="submit">
+        </form>
+      </div>
+      <div id="resultsDiv"></div>
+    </section>
+  </div>
+
+  <div class="container" style="display: none;">
+      <div class="jumbotron" style="background-color: #20315A ; color: white;">
+        <h1 class="text-center"><strong>Employee Data Management</strong></h1>
+        <h2 class="text-center"><strong>A Comprehensive Directory of Employee Billable Hours</strong></h2>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="panel panel-primary"> 
+            <div class="panel-heading"> 
+<!--               <h3 class="panel-title"> Current Employees </h3> -->
+              <div class="panel-body"> 
+                <table class="table" id="employee-id"> 
+                  <thead>
+                      <tr> 
+                        <th>Address</th>
+                        <th>Radius</th>
+                        <th>Game Type</th>
+                        <!-- <th>Monthly Rate</th>
+                        <th>Months Worked</th>
+                        <th>Total Billed($)</th> -->
+                      </tr>
+                  </thead>
+                  <tbody id="employee-row"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+     </div>
+     <div class="container">
+       <div class="row">
+         <div class ="col-lg-12">
+           <div class="panel panel-primary"> 
+             <div class="panel panel-heading"> 
+               <h3 class="panel-title">Add Employee </h3>
+ 
+             </div>
+             <div class="panel-body">
+               <form role="form">
+                 <div class="form-group">
+                   <label for="search">Employee name: </label>
+                   <input type="text" class="form control" id="employee-name">
+                 </div> 
+                   
+                <div class="form-group">
+                   <label for="role">Role: </label>
+                   <input type="text" class="form control" id="role">
+                 </div>
+                      
+                  <div class="form-group">
+                   <label for="start-year">Start Year: </label>
+                   <input type="text" class="form control" id="start-year">
+                 </div>
+                 
+                  <div class="form-group">
+                   <label for="monthly-rate">Monthly Rate: </label>
+                   <input type="text" class="form control" id="monthly-rate">
+                 </div> 
+                 <button type="submit" class="btn btn-default" id="submit">Submit</button>
+               </form>
+             </div>
+    
+           </div>
+           
+         </div>
+       </div>
+     </div>
+  </div>
+
+  <div id="footer">
+
+  </div>	
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="bideo.js"></script>
+  <script src="main.js"></script>
+  <script src="assets/javascript/app.js"></script>
+
 </body>
 </html>
