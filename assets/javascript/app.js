@@ -78,6 +78,7 @@ function getList(listURL) {
         resultsDiv.append("<hr>");        
       }
       $("#resultsDiv").html(resultsDiv);
+
         console.log("Done")
     }); 
 }
@@ -97,5 +98,6 @@ $('#create').on('click', function(event)){
     startTime: startTime,
     endTime: endTime
 });
+
 
 
