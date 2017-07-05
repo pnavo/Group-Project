@@ -29,7 +29,7 @@
 
       width: 100%; height: 100%;
 
-      background: url('video_cover.jpeg') no-repeat;
+      /*background: url('video_cover.jpeg') no-repeat;*/
       background-size: cover;
       background-position: center;
     }
@@ -61,6 +61,10 @@
     body {
       text-align: center;
       font-family: 'proxima-nova', Helvetica;
+    }
+  
+    .container {
+      display: none;
     }
 
     #container {

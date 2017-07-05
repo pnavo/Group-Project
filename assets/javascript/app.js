@@ -8,7 +8,9 @@ var config = {
     messagingSenderId: "477205336108"
  };
 
- firebase.initializeApp(config);
+ if (!firebase.apps.length) {
+ 	firebase.initializeApp(config);
+ }
 
 //variable to reference the database
 var database = firebase.database();
@@ -20,7 +22,27 @@ var radius;
 var gameType;
 var queryURL = cors + "https://maps.googleapis.com/maps/api/place/nearbysearch/json?query=" + coordinates + "&radius=" + radius + "&type=park&keyword=" + gameType + "&key=AIzaSyDPEkigjm2_zBLC8qVTcHkuHtFZNjSY3Zk";
 
-//on click of search button 
+//on click of find button
+$('#find').on('click', function (event){
+	event.preventDefault();
+	//display the form for user to fill out
+	$(".container").css("display", "inline");
+	//pull up table with input fields
+	// $('.container').slideToggle("slow");
+	//create form with input fields
+	// var addMember = $('<tr>');
+	// var memberName = $('<tr>');
+	// var memberAddress = $('<tr>');
+	// var memberEmail = $('<tr>');
+	// addMember.append(memberName);
+	// addMember.append(memberAddress);
+	// addMember.append(memberEmail);
+	// $('#add-member').append(addMember);
+});
+
+//on click of submit button 
+$('#submit').on('click', function(event){ 
+	event.preventDefault();
 	//pull value from input box
 	address = $("#address").val().trim();
 	//ajax call Google
@@ -33,9 +55,11 @@ var queryURL = cors + "https://maps.googleapis.com/maps/api/place/nearbysearch/j
 		//convert geo location address to coordinates 
   		coordinates = response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng;
   	});
-	//pull information from firebase 
+		//pull information from firebase 
+
 	//compare and see if there are games nearby
 	//display the google maps 
+});
 
 //on click of join button
 	//expand selection
