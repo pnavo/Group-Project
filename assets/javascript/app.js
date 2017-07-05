@@ -84,7 +84,7 @@ function getList(listURL) {
 }
 
 //create children in "game" object in firebase on click of "create" button
-$('#create').on('click', function(event){
+$('#organize').on('click', function(event){
 //pull the values from the create form
     //pull name val from HTML
     name = $('#name').val();
