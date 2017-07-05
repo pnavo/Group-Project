@@ -77,10 +77,7 @@ function getList(listURL) {
         resultsDiv.append("<hr>");        
       }
       $("#resultsDiv").html(resultsDiv);
-        console.log("Done")
-
+      console.log("Done");
     }); 
-}
-
-
+};
 
