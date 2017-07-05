@@ -55,6 +55,7 @@ $("#submit").on("click",function(e){
     }); 
 });
 
+//function to get list of parks from google API
 function getList(listURL) {
   $.ajax({
       url: listURL,
@@ -77,7 +78,26 @@ function getList(listURL) {
         resultsDiv.append("<hr>");        
       }
       $("#resultsDiv").html(resultsDiv);
-      console.log("Done");
+
+        console.log("Done")
     }); 
-};
+}
+
+//create children in firebase on click of creating new groups
+$('#create').on('click', function(event)){
+//pull the values from the create form
+    //pull name val from HTML
+    name = $('#name').val();
+    address = $('#address').val();
+    startTime = $('#startTime').val();
+    endTime = $('#endTime').val();
+//push the new variables to the cloud 
+  database.ref('games').push({
+    name: name,
+    address: address, 
+    startTime: startTime,
+    endTime: endTime
+});
+
+
 
