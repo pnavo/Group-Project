@@ -83,8 +83,8 @@ function getList(listURL) {
     }); 
 }
 
-//create children in firebase on click of creating new groups
-$('#create').on('click', function(event)){
+//create children in "game" object in firebase on click of "create" button
+$('#create').on('click', function(event){
 //pull the values from the create form
     //pull name val from HTML
     name = $('#name').val();
@@ -97,7 +97,24 @@ $('#create').on('click', function(event)){
     address: address, 
     startTime: startTime,
     endTime: endTime
+  });
 });
 
-
-
+//pull from "game" object in firebase when searching for a game
+$('#search').on('click', function(event){ 
+  database.ref('games').once("value", function (snapshot){
+  var userEntry = $('<tr>');
+  //create new variable to pull the value of the key/value from the Firebase snapshot
+  var userName = snapshot.val().name;
+  var userAddress = snapshot.val().address;
+  var userStartTime = snapshot.val().startTime;
+  var userEndTime = snapshot.val().endTime;
+  //append the information pulled from the cloud to the new HTML row created above
+  userEntry.append("<td>" + userName + "</td>");
+  userEntry.append("<td>" + userAddress + "</td>");
+  userEntry.append("<td>" + userStartTime + "</td>");
+  userEntry.append("<td>" + userEndTime + "</td>");
+  //append all of the user entries to the "train-entries" div
+  $('#resultsDiv').append(userEntry);
+  }); 
+});
