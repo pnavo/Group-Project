@@ -32,16 +32,28 @@
         
 
         </div>
+        <button onclick="myFunction()">Try it</button>
+
+        <script>
+function myFunction() {
+    var x = document.getElementById('first-page');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
 
     </div>
       <div id="head">
-        <h1>Pick Up Games</h1>
+        <h1>PUGS</h1>
         <p class="sub_head">Pick Up Games brings together sports enthusiasts who want to organize or find casual games around them.</p>
       </div>
 
       <div id="links">
-<!--    <input type="text" id="phone">
-        <input type="submit" id="submit"> -->
+   <input type="text" id="phone">
+        <input type="submit" id="submit">
 
         <a href="#" id='find'>Find a game</a>
         <a href="#" id="organize">Organize a game</a>
@@ -54,7 +66,14 @@
   <div class="container">
       <div class="jumbotron" style="background-color: #20315A ; color: white;">
         <h1 class="text-center"><strong>Pick-up Gang</strong></h1>
-        <h2 class="text-center"><strong>Can you hang? NO</strong></h2>
+        <h2 class="text-center"><strong>Can you hang? </strong></h2>
+      </div>
+      <div class="address_box">
+      <form>
+      <label>Address : </label>
+      <input type="text" id="address">
+      <input type="submit" id="submit">
+      </form> 
       </div>
       <div class="row">
         <div class="col-lg-12">
@@ -65,7 +84,8 @@
               <div class="panel-body"> 
                 <table class="table" id="employee-id"> 
                   <thead>
-                      <tr>  
+                      <tr> 
+
                         <!-- <th>Address</th>
                         <th>Game Time</th>
                         <th>Game Type</th> -->
@@ -82,14 +102,17 @@
           </div>
         </div>
      </div>
+
+
+   <div id="first_page">
      <div class="container">
        <div class="row">
          <div class ="col-lg-12">
            <div class="panel panel-primary"> 
              <div class="panel panel-heading"> 
-               <h3 class="panel-title"> </h3>
- 
+               <h3 class="panel-title"> </h3> 
              </div>
+
              <div class="panel-body">
                <form role="form">
                  <div class="form-group">
@@ -107,16 +130,13 @@
                    <input type="text" class="form control" id="start-year">
                  </div>
                  
-                  <!-- <div class="form-group">
-                   <label for="monthly-rate">Monthly Rate: </label>
-                   <input type="text" class="form control" id="monthly-rate">
-                 </div>  -->
-                 <form>
-                 <label>Address : </label>
-          <input type="text" id="address">
-          <input type="submit" id="submit">
-        </form>
-                 <!-- <button type="submit" class="btn btn-default" id="submit">Submit</button> -->
+
+                <form>
+                 <label>Find a game: </label>
+                <input type="text" id="address">
+                <input type="submit" id="submit">
+                </form>
+
                </form>
              </div>
     
@@ -126,6 +146,48 @@
        </div>
      </div>
   </div>
+  </div>
+
+  <div class="second_page">
+   <div class="container">
+    <div class="row">
+     <div class="col-lg-6">
+      <div class="panel panel-primary">
+       <div class="panel panel-heading"> 
+        <div id=“map”>
+         <div class="row">
+          <div class="col-lg-6">
+           <div id="game_div">
+           <p>This is where Time and Location go</p>
+           <button id="select_game">Select</button>
+
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>   
+       </div>
+      </div>  
+     </div>
+    </div>
+   </div>
+
+
+ <div class="third_page">
+  <div class="container">
+   <div class="row">
+    <div class="col-lg-12">
+    <div class="confirm_message">
+    <p>this is where confirmation message appears when team is selected through join option</p>
+      
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+
+ 
 
   <div id="footer">
 
