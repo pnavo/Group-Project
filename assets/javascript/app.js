@@ -16,16 +16,6 @@ var config = {
 //variable to reference the database
 var database = firebase.database();
 
-
-//on click of find button to search for games, form for user to fill out details is shown
-$('#find').on('click', function (event){
-  event.preventDefault();
-  //display the form for user to fill out
-  $(".container").css("display", "inline");
-  //pull up table with input fields
-  // $('.container').slideToggle("slow");
-});
-
 var cors = "https://cors-anywhere.herokuapp.com/";
 var coordinates;
 var queryURL;
@@ -34,29 +24,40 @@ var address = "160 Spear St, San Francisco";
 var radius = 5000;
 var gameType = "Basketball+Court";
 
-//on click of submit button to search for a game
-$('#search').on('click', function (event){
+//create children in "game" object in firebase on click of "organize" button
+$('#organize').on('click', function(event){
+  //display the form for user to fill out
+  $("#first_page").css("display", "inline");
+  //pull up table with input fields
+  // $('.container').slideToggle("slow");
+  //pull the values from the create form
+    name = $('#name').val();
+    address = $('#address').val();
+    startTime = $('#startTime').val();
+    endTime = $('#endTime').val();
+  //push the new variables to the cloud 
+    database.ref('games').push({
+      name: name,
+      address: address, 
+      startTime: startTime,
+      endTime: endTime
+  });
+});
+
+//on click of join button to search for a game after inputting the address
+$('#join').on('click', function (event){
   event.preventDefault();
   //pull from "game" object in firebase when searching for a game  
   database.ref('games').once("value", function (snapshot){
-    var userEntry = $('<tr>');
-    //create new variable to pull the value of the key/value from the Firebase snapshot
-    var userName = snapshot.val().name;
-    var userAddress = snapshot.val().address;
-    var userStartTime = snapshot.val().startTime;
-    var userEndTime = snapshot.val().endTime;
-    //append the information pulled from the cloud to the new HTML row created above
-    userEntry.append("<td>" + userName + "</td>");
-    userEntry.append("<td>" + userAddress + "</td>");
-    userEntry.append("<td>" + userStartTime + "</td>");
-    userEntry.append("<td>" + userEndTime + "</td>");
-    //append all of the user entries to the "train-entries" div
-    $('#resultsDiv').append(userEntry);
+    //pull the address from the input box 
+    address = $('#address').val();
+    //connect address and map
+    renderMap();
     });  
 });
 
-//on click of submit button to receive the coordinates of the user address to get the list of parks
-$("#submit").on("click",function(e){
+//on click of organize button to receive the coordinates of the user address to get the list of parks
+$("#organize").on("click",function(e){
   e.preventDefault();
   console.log("clicked");
   //pull value from input box
@@ -134,19 +135,3 @@ function initMap() {
     zoom: 15
   });
 }
-
-//create children in "game" object in firebase on click of "organize" button
-$('#organize').on('click', function(event){
-  //pull the values from the create form
-    name = $('#name').val();
-    address = $('#address').val();
-    startTime = $('#startTime').val();
-    endTime = $('#endTime').val();
-  //push the new variables to the cloud 
-    database.ref('games').push({
-      name: name,
-      address: address, 
-      startTime: startTime,
-      endTime: endTime
-  });
-});

@@ -54,6 +54,11 @@ html, body {
   #video_controls {
     display: none;
   }
+
+#first_page {
+   display: none;
+}
+
 }
 
 /* Demo page specific styles */
