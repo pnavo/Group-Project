@@ -38,15 +38,16 @@ function hideDivs() {
 hideDivs();
 $("#landing").show();
 //on click of join button to search for a game after inputting the address
+
 $('#join').on('click', function (event){
-  event.preventDefault();
+  hideDivs();
   $("#join_one").show();
   //pull from "game" object in firebase when searching for a game  
   database.ref('games').once("value", function (snapshot){
     //pull the address from the input box 
     address = $('#address').val().trim();
     getCoord(address);
-    getGamesList(coordLat,coordLng);
+    getGameList(coordLat,coordLng);
     //connect address and map
     renderGameMap(coordLat,coordLng);
   });  
@@ -103,7 +104,12 @@ function getCoord(address) {
     }); 
 };
 
-function getGamesList(coordLat,coordLng) {
+function getGameList(coordLat,coordLng) {
+
+};
+
+
+function renderGameMap(coordLat,coordLng) {
 
 };
 
