@@ -41,17 +41,18 @@ $("#submit").on("click",function(e){
   //pull value from input box
   address = $("#address").val().trim();
   // Retrieve coordinates for the address entered
-    $.ajax({
-      url: cors + "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + address + "&key=AIzaSyDPEkigjm2_zBLC8qVTcHkuHtFZNjSY3Zk",
-      method: "GET"
-    }).done(function(response){
-      console.log(response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng);
-    //convert geo location address to coordinates 
-      coordinates = response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng;
-      queryURL = cors + "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + coordinates + "&radius=" + radius + "&type=park&keyword=" + gameType + "&key=AIzaSyDPEkigjm2_zBLC8qVTcHkuHtFZNjSY3Zk";
-      console.log(queryURL);
-      // Retrieve list of venues available for game
-        getList(queryURL);
+  $.ajax({
+    url: cors + "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + address + "&key=AIzaSyDPEkigjm2_zBLC8qVTcHkuHtFZNjSY3Zk",
+    method: "GET"
+  }).done(function(response){
+    console.log(response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng);
+  //convert geo location address to coordinates 
+    coordinates = response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng;
+    queryURL = cors + "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + coordinates + "&radius=" + radius + "&type=park&keyword=" + gameType + "&key=AIzaSyDPEkigjm2_zBLC8qVTcHkuHtFZNjSY3Zk";
+    console.log(queryURL);
+    // Retrieve list of venues available for game
+    getList(queryURL);
+    renderMap(coordinates);
     }); 
 });
 
@@ -68,16 +69,47 @@ function getList(listURL) {
         var openP = $("<p>");
         // var photo = $("<img>");
         console.log(results[i].name);
-        console.log(results[i].opening_hours.open_now);
         nameP.append(results[i].name);
-        openP.append(results[i].opening_hours.open_now);
+        if (results[i].opening_hours !== undefined) {
+          openP.append(results[i].opening_hours.open_now);          
+          console.log(results[i].opening_hours.open_now);      
+        };
         // photo.attr("src","")
         resultsDiv.append(nameP);
-        // resultsDiv.append(openP);
+        resultsDiv.append(openP);
         resultsDiv.append("<hr>");        
       }
       $("#resultsDiv").html(resultsDiv);
       console.log("Done");
     }); 
 };
+
+function renderMap(coord) {
+  var latlng = coord.split(",")
+  var coordLat = parseFloat(latlng[0])
+  var coordLng = parseFloat(latlng[1])
+  var coordCenter = {lat: coordLat, lng: coordLng};
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: coordCenter,
+    zoom: 15
+  });
+  // Pull gamesList from Firebase
+  var gamesList;
+  // Create marker for each game nearby
+  for (var i = 0; i < gamesList.length; i++) {
+    var coords = gamesList[i]
+    var marker = new google.maps.Marker({
+      position: coords,
+      map: map
+    });
+  };
+};
+
+// Construct map in div #map
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -34.397, lng: 150.644},
+    zoom: 15
+  });
+}
 
