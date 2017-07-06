@@ -27,53 +27,63 @@ var radius = 5000;
 var gameType = "Basketball+Court";
 
 function hideDivs() {
-  
+  $("#join_one").hide();
+  $("#join_message").hide();
+  $("#org_one").hide();
+  $("#org_form").hide();
+  $("#org_message").hide();
+  $("#landing").hide();
 }
-
-//create children in "game" object in firebase on click of "organize" button
-$('#organize').on('click', function(event){
-  //display the form for user to fill out
-  $("#first_page").css("display", "inline");
-  //pull up table with input fields
-  // $('.container').slideToggle("slow");
-  //pull the values from the create form
-    name = $('#name').val();
-    address = $('#address').val();
-    startTime = $('#startTime').val();
-    endTime = $('#endTime').val();
-  //push the new variables to the cloud 
-    database.ref('games').push({
-      name: name,
-      address: address, 
-      startTime: startTime,
-      endTime: endTime
-  });
-});
 
 //on click of join button to search for a game after inputting the address
 $('#join').on('click', function (event){
   event.preventDefault();
+  $("#join_one").show();
   //pull from "game" object in firebase when searching for a game  
   database.ref('games').once("value", function (snapshot){
     //pull the address from the input box 
     address = $('#address').val().trim();
-    getCoord(address)
+    getCoord(address);
+    getGamesList(coordLat,coordLng);
     //connect address and map
-    renderMap(coordLat,coordLng);
-    });  
+    renderGameMap(coordLat,coordLng);
+  });  
 });
 
 //on click of organize button to receive the coordinates of the user address to get the list of parks
-$("#organize").on("click",function(e){
-  e.preventDefault();
+$('#organize').on('click', function(event){
+  //display the form for user to fill out
+  hideDivs();
+  $("#org_form").show();
   console.log("clicked");
   //pull value from input box
   address = $("#address").val().trim();
   // Retrieve coordinates for the address entered
   getCoord(address);
     // Retrieve list of venues available for game
-  getList(queryURL);
-  renderMap(coordLat,coordLng);
+  getParkList(queryURL);
+  renderParkMap(coordLat,coordLng);
+});
+  //pull up table with input fields
+  // $('.container').slideToggle("slow");
+  //pull the values from the create form
+$("#submit").on('click', function(){
+  name = $('#name').val().trim();
+  address = $('#address').val().trim();
+  startTime = $('#startTime').val().trim();
+  endTime = $('#endTime').val().trim();
+  date = $('#date').val().trim();
+  //push the new variables to the cloud 
+  database.ref('games').push({
+    name: name,
+    address: address, 
+    startTime: startTime,
+    endTime: endTime,
+    date: date
+  });
+  // Hide Create div and show confirmation-message
+  hideDivs();
+  $("#confirmation-message").show();
 });
 
 function getCoord(address) {
@@ -91,9 +101,12 @@ function getCoord(address) {
     }); 
 };
 
+function getGamesList(coordLat,coordLng) {
+
+};
 
 //function to get list of parks from google API
-function getList(listURL) {
+function getParkList(listURL) {
   $.ajax({
       url: listURL,
       method: "GET"
@@ -121,7 +134,7 @@ function getList(listURL) {
     }); 
 }
 
-function renderMap(coordLat,coordLng) {
+function renderParkMap(coordLat,coordLng) {
   var coordCenter = {lat: coordLat, lng: coordLng};
   map = new google.maps.Map(document.getElementById('map'), {
     center: coordCenter,
