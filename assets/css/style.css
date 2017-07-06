@@ -62,10 +62,11 @@
       text-align: center;
       font-family: 'proxima-nova', Helvetica;
     }
-  
-    .container {
+
+    #first_page {
       display: none;
     }
+
 
     #overlay {
       position: absolute;
