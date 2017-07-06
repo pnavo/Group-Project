@@ -17,12 +17,18 @@ var config = {
 var database = firebase.database();
 
 var cors = "https://cors-anywhere.herokuapp.com/";
+var coordLat;
+var coordLng;
 var coordinates;
 var queryURL;
 // Default values
 var address = "160 Spear St, San Francisco";
 var radius = 5000;
 var gameType = "Basketball+Court";
+
+function hideDivs() {
+  
+}
 
 //create children in "game" object in firebase on click of "organize" button
 $('#organize').on('click', function(event){
@@ -50,9 +56,10 @@ $('#join').on('click', function (event){
   //pull from "game" object in firebase when searching for a game  
   database.ref('games').once("value", function (snapshot){
     //pull the address from the input box 
-    address = $('#address').val();
+    address = $('#address').val().trim();
+    getCoord(address)
     //connect address and map
-    renderMap();
+    renderMap(coordLat,coordLng);
     });  
 });
 
@@ -63,20 +70,27 @@ $("#organize").on("click",function(e){
   //pull value from input box
   address = $("#address").val().trim();
   // Retrieve coordinates for the address entered
+  getCoord(address);
+    // Retrieve list of venues available for game
+  getList(queryURL);
+  renderMap(coordLat,coordLng);
+});
+
+function getCoord(address) {
   $.ajax({
     url: cors + "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + address + "&key=AIzaSyDPEkigjm2_zBLC8qVTcHkuHtFZNjSY3Zk",
     method: "GET"
   }).done(function(response){
-    console.log(response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng);
-  //convert geo location address to coordinates 
-    coordinates = response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng;
+  //convert geo location address to coordinates
+    coordLat = response.results[0].geometry.location.lat;
+    coordLng = response.results[0].geometry.location.lng;
+    coordinates = coordLat + "," + coordLng;
+    console.log("Coordinates: ",coordinates)
     queryURL = cors + "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + coordinates + "&radius=" + radius + "&type=park&keyword=" + gameType + "&key=AIzaSyDPEkigjm2_zBLC8qVTcHkuHtFZNjSY3Zk";
-    console.log(queryURL);
-    // Retrieve list of venues available for game
-    getList(queryURL);
-    renderMap(coordinates);
+    console.log("Query: ",queryURL);
     }); 
-});
+};
+
 
 //function to get list of parks from google API
 function getList(listURL) {
@@ -95,7 +109,7 @@ function getList(listURL) {
         nameP.append(results[i].name);
         if (results[i].opening_hours !== undefined) {
           openP.append(results[i].opening_hours.open_now);          
-          console.log(results[i].opening_hours.open_now);      
+          console.log("Opening hours: ",results[i].opening_hours.open_now);      
         };
         // photo.attr("src","")
         resultsDiv.append(nameP);
@@ -103,14 +117,11 @@ function getList(listURL) {
         resultsDiv.append("<hr>");        
       }
       $("#resultsDiv").html(resultsDiv);
-        console.log("Done")
+        console.log("Get list: Done")
     }); 
 }
 
-function renderMap(coord) {
-  var latlng = coord.split(",")
-  var coordLat = parseFloat(latlng[0])
-  var coordLng = parseFloat(latlng[1])
+function renderMap(coordLat,coordLng) {
   var coordCenter = {lat: coordLat, lng: coordLng};
   map = new google.maps.Map(document.getElementById('map'), {
     center: coordCenter,
