@@ -54,11 +54,6 @@ html, body {
   #video_controls {
     display: none;
   }
-
-#first_page {
-   display: none;
-}
-
 }
 
 /* Demo page specific styles */
@@ -66,10 +61,6 @@ html, body {
 body {
   text-align: center;
   font-family: 'proxima-nova', Helvetica;
-}
-
-.container {
-  display: none;
 }
 
 #overlay {
