@@ -33,8 +33,10 @@ function hideDivs() {
   $("#org_form").hide();
   $("#org_message").hide();
   $("#landing").hide();
-}
+};
 
+hideDivs();
+$("#landing").show();
 //on click of join button to search for a game after inputting the address
 $('#join').on('click', function (event){
   event.preventDefault();
