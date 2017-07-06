@@ -34,7 +34,28 @@ var address = "160 Spear St, San Francisco";
 var radius = 5000;
 var gameType = "Basketball+Court";
 
-//on click of submit button to receive the coordinates of the user address
+//on click of submit button to search for a game
+$('#search').on('click', function (event){
+  event.preventDefault();
+  //pull from "game" object in firebase when searching for a game  
+  database.ref('games').once("value", function (snapshot){
+    var userEntry = $('<tr>');
+    //create new variable to pull the value of the key/value from the Firebase snapshot
+    var userName = snapshot.val().name;
+    var userAddress = snapshot.val().address;
+    var userStartTime = snapshot.val().startTime;
+    var userEndTime = snapshot.val().endTime;
+    //append the information pulled from the cloud to the new HTML row created above
+    userEntry.append("<td>" + userName + "</td>");
+    userEntry.append("<td>" + userAddress + "</td>");
+    userEntry.append("<td>" + userStartTime + "</td>");
+    userEntry.append("<td>" + userEndTime + "</td>");
+    //append all of the user entries to the "train-entries" div
+    $('#resultsDiv').append(userEntry);
+    });  
+});
+
+//on click of submit button to receive the coordinates of the user address to get the list of parks
 $("#submit").on("click",function(e){
   e.preventDefault();
   console.log("clicked");
@@ -56,6 +77,7 @@ $("#submit").on("click",function(e){
     }); 
 });
 
+//function to get list of parks from google API
 function getList(listURL) {
   $.ajax({
       url: listURL,
@@ -80,9 +102,9 @@ function getList(listURL) {
         resultsDiv.append("<hr>");        
       }
       $("#resultsDiv").html(resultsDiv);
-      console.log("Done");
+        console.log("Done")
     }); 
-};
+}
 
 function renderMap(coord) {
   var latlng = coord.split(",")
@@ -113,3 +135,18 @@ function initMap() {
   });
 }
 
+//create children in "game" object in firebase on click of "organize" button
+$('#organize').on('click', function(event){
+  //pull the values from the create form
+    name = $('#name').val();
+    address = $('#address').val();
+    startTime = $('#startTime').val();
+    endTime = $('#endTime').val();
+  //push the new variables to the cloud 
+    database.ref('games').push({
+      name: name,
+      address: address, 
+      startTime: startTime,
+      endTime: endTime
+  });
+});
