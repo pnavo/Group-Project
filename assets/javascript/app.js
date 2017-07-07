@@ -21,6 +21,7 @@ var coordLat;
 var coordLng;
 var coordinates;
 var queryURL;
+var park;
 // Default values
 var address = "160 Spear St, San Francisco";
 var radius = 5000;
@@ -43,14 +44,12 @@ $('#join').on('click', function (event){
   hideDivs();
   $("#join_one").show();
   //pull from "game" object in firebase when searching for a game  
-  database.ref('games').once("value", function (snapshot){
-    //pull the address from the input box 
-    address = $('#address').val().trim();
-    getCoord(address);
-    getGameList(coordLat,coordLng);
-    //connect address and map
-    renderGameMap(coordLat,coordLng);
-  });  
+  //pull the address from the input box 
+  address = $('#address').val().trim();
+  getCoord(address);
+  getGameList(coordLat,coordLng);
+  //connect address and map
+  renderGameMap(coordLat,coordLng);
 });
 
 //function to show list of parks when users want to organize a game
@@ -92,19 +91,22 @@ $('#organize').on('click', function(event){
   renderParkMap(coordLat,coordLng);
   showParkList();
 });
+
+$(".create").on('click',function(event){
+  park = $(this).attr("data-park");
+});
   //pull up table with input fields
   // $('.container').slideToggle("slow");
   //pull the values from the create form
 $("#submit").on('click', function(){
   name = $('#name').val().trim();
-  address = $('#address').val().trim();
   startTime = $('#startTime').val().trim();
   endTime = $('#endTime').val().trim();
   date = $('#date').val().trim();
   //push the new variables to the cloud 
   database.ref('games').push({
     name: name,
-    address: address, 
+    park: park,
     startTime: startTime,
     endTime: endTime,
     date: date
@@ -130,7 +132,9 @@ function getCoord(address) {
 };
 
 function getGameList(coordLat,coordLng) {
-
+  database.ref('games').once("value", function (snapshot){
+    console.log(snapshot);
+  });
 };
 
 
