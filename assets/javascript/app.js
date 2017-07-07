@@ -22,8 +22,13 @@ var coordLng;
 var coordinates;
 var queryURL;
 var park;
+var parkLat;
+var parkLng;
 var gameList = [];
 var gamesNearby = [];
+// Map instances
+var gameMap;
+var parkMap;
 // Default values
 var address = "160 Spear St, San Francisco";
 var radius = 5000;
@@ -51,9 +56,10 @@ $('#join').on('click', function (event){
   getCoord(address);
   // radius = $("#miles").val();
   queryURL = cors + "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + coordinates + "&radius=" + radius + "&type=park&keyword=" + gameType + "&key=AIzaSyDPEkigjm2_zBLC8qVTcHkuHtFZNjSY3Zk";
-  populateGameList(queryURL);
   //connect address and map
   renderGameMap(coordLat,coordLng);
+  //populate table with nearby games
+  populateGameList(queryURL);
 });
 
 function populateGameList(queryURL){
@@ -63,12 +69,37 @@ function populateGameList(queryURL){
     snapshot.forEach(function(snap){
       console.log(snap.val().park);
       gameList.push(snap.val().park);
+      //add map marker to gameMap
+      console.log(snap.val().lat,",",snap.val().lng);
+      var markerCoords = {lat: snap.val().lat, lng: snap.val().lng};
+      var marker = new google.maps.Marker({
+        position: markerCoords,
+        map: gameMap
+      });
     });
   });
   getGamesNearby(queryURL);
+
   for (var i = 0; i < gamesNearby.length; i++) {
-    $("#resultsDiv").append("<p>" + gamesNearby[i] + "</p>");
+    var resultsRow = $("<tr>")
+    var nameCol = $("<td>");
+    var timeCol = $("<td>");
+    var countCol = $("<td>");
+    var buttonCol = $("<button>");
+    console.log(gamesNearby[i]);
+    nameCol.append(gamesNearby[i]);
+    // Grab from firebase
+    timeCol.append();
+    countCol.append();
+    buttonCol.attr("data-park",gamesNearby[i]);
+
+    resultsRow.append(nameCol);
+    resultsRow.append(timeCol);
+    resultsRow.append(countCol);
+    resultsRow.append(buttonCol);
+    $("#gameTable").append(resultsRow);
   }
+    console.log("Get list: Done");
 };
 
 //
@@ -93,7 +124,7 @@ function getGamesNearby(listURL){
 $('#organize').on('click', function(event){
   //display the form for user to fill out
   hideDivs();
-  $("#org_form").show();
+  $("#org_one").show();
   console.log("clicked");
   //pull value from input box
   address = $("#address").val().trim();
@@ -107,12 +138,19 @@ $('#organize').on('click', function(event){
 });
 
 $(".create").on('click',function(event){
+  hideDivs();
+  $("#org_form").show();
   park = $(this).attr("data-park");
+  parkLat = $(this).attr("data-lat");
+  parkLng = $(this).attr("data-lng");
 });
   //pull up table with input fields
   // $('.container').slideToggle("slow");
   //pull the values from the create form
 $("#submit").on('click', function(){
+  // Hide Create div and show confirmation-message
+  hideDivs();
+  $("#org-message").show();
   name = $('#name').val().trim();
   startTime = $('#startTime').val().trim();
   endTime = $('#endTime').val().trim();
@@ -121,13 +159,12 @@ $("#submit").on('click', function(){
   database.ref('games').push({
     name: name,
     park: park,
+    lat: parkLat,
+    lng: parkLng,
     startTime: startTime,
     endTime: endTime,
     date: date
   });
-  // Hide Create div and show confirmation-message
-  hideDivs();
-  $("#confirmation-message").show();
 });
 
 function getCoord(address) {
@@ -153,8 +190,22 @@ function getCoord(address) {
 
 
 function renderGameMap(coordLat,coordLng) {
-
+  var coordCenter = {lat: coordLat, lng: coordLng};
+  gameMap = new google.maps.Map(document.getElementById('game_map'), {
+    center: coordCenter,
+    zoom: 15
+  });
 };
+  // // Pull coordinates from Firebase
+  // // Create marker for each game nearby
+  // for (var i = 0; i < coordsList.length; i++) {
+  //   var coords = coordsList[i]
+  //   var marker = new google.maps.Marker({
+  //     position: coords,
+  //     map: gameMap
+  //   });
+  // };
+
 
 //function to get list of parks from google API
 function getParkList(listURL) {
@@ -163,25 +214,38 @@ function getParkList(listURL) {
       method: "GET"
     }).done(function(response){
       console.log(response);
-      var resultsDiv = $("<div>")
       var results = response.results
       for (var i = 0; i < results.length; i++) {
-        var nameP = $("<p>");
-        var openP = $("<p>");
-        // var photo = $("<img>");
+        var resultsRow = $("<tr>");
+        var nameCol = $("<td>");
+        var timeCol = $("<td>");
+        var countCol = $("<td>");
+        var buttonCol = $("<button>")
         console.log(results[i].name);
-        nameP.append(results[i].name);
-        if (results[i].opening_hours !== undefined) {
-          openP.append(results[i].opening_hours.open_now);          
-          console.log("Opening hours: ",results[i].opening_hours.open_now);      
-        };
-        // photo.attr("src","")
-        resultsDiv.append(nameP);
-        resultsDiv.append(openP);
-        resultsDiv.append("<hr>");        
+        nameCol.append(results[i].name);
+        // Grab from firebase
+        timeCol.append();
+        countCol.append();
+        buttonCol.attr("data-park",results[i].name);
+        // if (results[i].opening_hours !== undefined) {
+        //   openP.append(results[i].opening_hours.open_now);          
+        //   console.log("Opening hours: ",results[i].opening_hours.open_now);      
+        // };
+        resultsRow.append(nameCol);
+        resultsRow.append(timeCol);
+        resultsRow.append(countCol);
+        resultsRow.append(buttonCol);       
+        $("#parkTable").append(resultsRow);   
+
+        //add map markers to parkMap
+        console.log(results[i].geometry.location.lat,",",geometry.location.lng);
+        var markerCoords = {lat: geometry.location.lat, lng: geometry.location.lng};
+        var marker = new google.maps.Marker({
+          position: markerCoords,
+          map: parkMap
+        }); 
       }
-      $("#resultsDiv").html(resultsDiv);
-        console.log("Get list: Done")
+        console.log("Get list: Done");
     }); 
 };
 
@@ -190,26 +254,24 @@ function showGamesList(){};
 
 function renderParkMap(coordLat,coordLng) {
   var coordCenter = {lat: coordLat, lng: coordLng};
-  map = new google.maps.Map(document.getElementById('map'), {
+  parkMap = new google.maps.Map(document.getElementById('park_map'), {
     center: coordCenter,
     zoom: 15
   });
-  // Pull coordinates from Firebase
-  var coordsList;
-  // Create marker for each game nearby
-  for (var i = 0; i < coordsList.length; i++) {
-    var coords = coordsList[i]
-    var marker = new google.maps.Marker({
-      position: coords,
-      map: map
-    });
-  };
+  // // Create marker for each game nearby
+  // for (var i = 0; i < coordsList.length; i++) {
+  //   var coords = coordsList[i]
+  //   var marker = new google.maps.Marker({
+  //     position: coords,
+  //     map: map
+  //   });
+  // };
 };
 
 // Construct map in div #map
-function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -34.397, lng: 150.644},
-    zoom: 15
-  });
-}
+// function initMap() {
+//     map = new google.maps.Map(document.getElementById('map'), {
+//     center: {lat: -34.397, lng: 150.644},
+//     zoom: 15
+//   });
+// }

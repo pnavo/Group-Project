@@ -36,7 +36,7 @@
     // of different video formats to add
     src: [
       {
-        src: 'sample.mp4',
+        src: 'granny_shot.mp4',
         type: 'video/mp4'
       },
     ],
