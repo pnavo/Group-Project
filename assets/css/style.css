@@ -70,6 +70,11 @@ body {
   background: rgba(0,0,0,0.5);
 }
 
+#orgone {
+display: none;
+
+}
+
 #map {
 position: static;
 overflow-y: auto;
@@ -115,17 +120,6 @@ overflow-y: auto;
   /*text-align: right;*/
 }
 
-#address_box {
-  width: 80%;
-  height:80%;
-
-}
-
-#first_page {
-  width: 100%;
-  height: 100%;
-}
-
 #links {
   margin-top: 50px;
 }
@@ -143,11 +137,17 @@ overflow-y: auto;
   margin-right: 15px;
 }
 
-#searcher {
-  color: white;
-  
+#select {
+  width: 25%;
+  height: 50%;
 }
-.thead-inverse {
+
+/*#searcher {
+  color: white;
+
+}*/
+
+#gameTable {
   color: white;
   position: static;
   overflow-y: auto;
