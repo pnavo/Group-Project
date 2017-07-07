@@ -33,7 +33,9 @@
       </div>
       <div id="links">
         <form>
-          <label style="color: white;">Address: </label>
+          <label id="address_text" style="color: white;"
+
+  id="address_input">Address: </label>
           <p><input type="text" id="address"></p>
         </form>
         <a href="#" id='join'>Find a game</a>
@@ -46,6 +48,26 @@
         <div class="row">
           <div class="col-lg-6">
             <div id="resultsDiv"></div>
+            <div>
+            <table id="table_test" style="width:100%">
+  <tr>
+    <th id="table_test">Player Count</th>
+    <th>Game Time</th> 
+    <th>Location</th>
+  </tr>
+  <tr>
+    <td>Jill</td>
+    <td>Smith</td> 
+    <td>50</td>
+  </tr>
+  <tr>
+    <td>Eve</td>
+    <td>Jackson</td> 
+    <td>94</td>
+  </tr>
+</table>
+
+</div>
           </div>
           <div class="col-lg-6">
             <div style="height: 400px;">
@@ -79,18 +101,22 @@
           <div class="col-lg-12">
             <form>
               <p>
-                Name: <input type="text" name="name" placeholder="John Smith">
+                Name: <br>
+                <input type="text" name="name" placeholder="John Smith">
               </p>
               <p>
-                Date: <input type="date" name="date" placeholder="MM/DD/YYY">
+                Date: <br>
+                <input type="date" name="date" placeholder="MM/DD/YYY">
               </p>
               <p>
-                Start: <input type="datetime-local" name="startTime">
+                Start: <br>
+                <input type="time" name="startTime">
               </p>
               <p>
-                End: <input type="datetime-local" name="endTime">
+                End: <br>
+                <input type="time" name="endTime">
               </p>
-              <p><input type="submit"></p>
+              <input type="submit" value=" Create Game "></p>
             </form>
           </div>
         </div>
