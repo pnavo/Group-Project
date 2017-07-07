@@ -22,6 +22,7 @@ var coordLng;
 var coordinates;
 var queryURL;
 var park;
+var parkList = [];
 // Default values
 var address = "160 Spear St, San Francisco";
 var radius = 5000;
@@ -52,28 +53,23 @@ $('#join').on('click', function (event){
   renderGameMap(coordLat,coordLng);
 });
 
-//function to show list of parks when users want to organize a game
-function showParkList(){
-  getParkList(queryURL);
-  var resultsDiv = $("<div>")
-  var results = response.results
-  for (var i = 0; i < results.length; i++) {
-    var nameP = $("<p>");
-    var openP = $("<p>");
-    // var photo = $("<img>");
-    console.log(results[i].name);
-    nameP.append(results[i].name);
-    if (results[i].opening_hours !== undefined) {
-      openP.append(results[i].opening_hours.open_now);          
-      console.log("Opening hours: ",results[i].opening_hours.open_now);      
-    };
-    // photo.attr("src","")
-    resultsDiv.append(nameP);
-    resultsDiv.append(openP);
-    resultsDiv.append("<hr>");        
-  }
-  $("#resultsDiv").html(resultsDiv);
-    console.log("Get list: Done")
+//
+function parkList(listURL){
+  $.ajax({
+      url: listURL,
+      method: "GET"
+    }).done(function(response){
+      console.log(response);
+      var results = response.results
+      parkList = [];
+      for (var i = 0; i < results.length; i++) {
+        
+
+        parkList.push(results[i].name);
+      };
+
+
+    });   
 };
 
 //on click of organize button to receive the coordinates of the user address to get the list of parks
@@ -149,11 +145,30 @@ function getParkList(listURL) {
       method: "GET"
     }).done(function(response){
       console.log(response);
+      var resultsDiv = $("<div>")
+      var results = response.results
+      for (var i = 0; i < results.length; i++) {
+        var nameP = $("<p>");
+        var openP = $("<p>");
+        // var photo = $("<img>");
+        console.log(results[i].name);
+        nameP.append(results[i].name);
+        if (results[i].opening_hours !== undefined) {
+          openP.append(results[i].opening_hours.open_now);          
+          console.log("Opening hours: ",results[i].opening_hours.open_now);      
+        };
+        // photo.attr("src","")
+        resultsDiv.append(nameP);
+        resultsDiv.append(openP);
+        resultsDiv.append("<hr>");        
+      }
+      $("#resultsDiv").html(resultsDiv);
+        console.log("Get list: Done")
     }); 
 };
 
 //function to show list of PUGs in the area 
-function showGamesList
+function showGamesList(){};
 
 function renderParkMap(coordLat,coordLng) {
   var coordCenter = {lat: coordLat, lng: coordLng};
