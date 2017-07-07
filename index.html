@@ -49,47 +49,21 @@
       </div>
     </section>
 
-     <section id="org_one">
+    <section id="org_one">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12" id="location_list"></div>
-
-           <thead id="park_Table">
-            <tr>
-              <th>Park Location</th>
-              
-            </tr>
-          </thead> 
-
-          <div class="col-lg-6">
+          <div class="col-xs-6" id="location_list">
+            <table id="parkTable">
+              <tr>
+                <th>Park Name</th>
+              </tr>
+            </table> 
+          </div>
+          <div class="col-xs-6">
             <div style="height: 400px;">
               <div id="park_map"></div>
-              </div>
             </div>
           </div>
-          <!-- <form>
-              <p>
-                Name: <br>
-                <input type="text" name="name" placeholder="John Smith">
-              </p>
-              <p>
-                Date: <br>
-                <input type="date" name="date" placeholder="MM/DD/YYY">
-              </p>
-              <p>
-                Start: <br>
-                <input type="time" name="startTime">
-              </p>
-              <p>
-                End: <br>
-                <input type="time" name="endTime">
-              </p>
-              <input type="submit" value=" Create Game "></p>
-            </form> -->
-
-      
-
-
         </div>
       </div>
     </section>
@@ -97,7 +71,7 @@
     <section id="join_one">
       <div class="container">
         <div class="row">
-          <div class="col-lg-6">
+          <div class="col-xs-6">
             <div id="resultsDiv"></div>
 
             <table id="gameTable">
@@ -107,10 +81,8 @@
                 <th>Player Count</th>
               </tr>
             </table> 
-            <button id="select">Select</button>
-
           </div>
-          <div class="col-lg-6">
+          <div class="col-xs-6">
             <div style="height: 400px;">
               <div id="game_map"></div>
             </div>
@@ -122,9 +94,9 @@
     <section id="join_message">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12" id="confirm_message">
-            <p>this is where confirmation message appears when team is selected through join option</p>
-          </div>
+          <div class="col-xs-12" id="confirm_message">
+            <p>Congratulations! You've joined a PUG on <span id="joinTimeText">_time_</span> at <span id="joinParkText">_park_</span>!</p>
+            <div id="links"><a href="#" id="return">Back to Home</a></div>
         </div>
       </div>
     </section>
@@ -150,21 +122,21 @@
     <section id="org_form">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-xs-12">
             <form>
               <p>
-                Name: <input type="text" name="name" placeholder="John Smith">
+                Name: <input type="text" id="name" placeholder="John Smith">
               </p>
               <p>
-                Date: <input type="date" name="date" placeholder="MM/DD/YYY">
+                Date: <input type="date" id="date" placeholder="MM/DD/YYY">
               </p>
               <p>
-                Start: <input type="datetime-local" name="startTime">
+                Start: <input type="time" id="startTime">
               </p>
               <p>
-                End: <input type="datetime-local" name="endTime">
+                End: <input type="time" id="endTime">
               </p>
-              <p><input type="submit"></p>
+              <p><input type="submit" id="submit"></p>
             </form>
           </div>
         </div>
@@ -173,8 +145,9 @@
     <section id="org_message">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12" id="org_congrats">
-            <p>this is where confirmation message appears when team is selected through join option</p>
+          <div class="col-xs-12" id="org_congrats">
+            <p>Congratulations! You've started a PUG on <span id="timeText">_time_</span> at <span id="parkText">_park_</span>!</p>
+            <div id="links"><a href="#" id="return">Back to Home</a></div>
           </div>
         </div>
       </div>

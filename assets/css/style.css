@@ -75,10 +75,10 @@ display: none;
 
 }
 
-#map {
-position: static;
-overflow-y: auto;
-
+#game_map, #park_map {
+  position: static;
+  overflow-y: auto;
+  height: 100%;
 }
 
 #main_content {
@@ -171,11 +171,30 @@ overflow-y: auto;
   float: right;
 }
 
+
 table {
   width: 100%;
   text-align: left;
+  color: white;
+}
+
+tr {
+  padding-bottom: 10px;
 }
 
 th {
-  width: 25%; 
+  margin-right: 5px;
+  width: 33%; 
+  font-size: 20px;
+  border-bottom: solid 1px white;
+}
+
+button {
+  color: black;
+  padding: 0px 10px;
+}
+
+#org_message, #join_message {
+  color: white;
+  font-size: 24px;
 }

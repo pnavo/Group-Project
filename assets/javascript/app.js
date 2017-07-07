@@ -25,6 +25,9 @@ var park;
 var parkLat;
 var parkLng;
 var gameList = [];
+var startTimeList = [];
+var endTimeList = [];
+var countList = [];
 var gamesNearby = [];
 // Map instances
 var gameMap;
@@ -71,12 +74,22 @@ $('#join').on('click', function (event){
   populateGameList(queryURL);
 });
 
+$(document).on('click','.select',function(event){
+  hideDivs();
+  $("#join_message").show();
+  $("#joinTimeText").text($(this).attr("data-time"));
+  $("#joinParkText").text($(this).attr("data-park"));
+});
+
 function populateGameList(queryURL){
   database.ref().child('games').orderByChild('park').once("value", function(snapshot) {
     console.log(snapshot.val());
     snapshot.forEach(function(snap){
       console.log(snap.val().park);
       gameList.push(snap.val().park);
+      startTimeList.push(snap.val().startTime);
+      endTimeList.push(snap.val().endTime);
+      countList.push(snap.val().count);
       //add map marker to gameMap
       console.log(snap.val().lat,",",snap.val().lng);
       var markerCoords = {lat: snap.val().lat, lng: snap.val().lng};
@@ -89,24 +102,29 @@ function populateGameList(queryURL){
   setTimeout(getGamesNearby(queryURL),500);
   setTimeout(function(){
     for (var i = 0; i < gamesNearby.length; i++) {
-    debugger;
-    var resultsRow = $("<tr>")
-    var nameCol = $("<td>");
-    var timeCol = $("<td>");
-    var countCol = $("<td>");
-    var buttonCol = $("<button>");
-    console.log(gamesNearby[i]);
-    nameCol.append(gamesNearby[i]);
-    // Grab from firebase
-    timeCol.append();
-    countCol.append();
-    buttonCol.attr("data-park",gamesNearby[i]);
+      var resultsRow = $("<tr>")
+      var nameCol = $("<td>");
+      var timeCol = $("<td>");
+      var countCol = $("<td>");
+      var buttonCol = $("<button>");
+      console.log(gamesNearby[i]);
+      nameCol.append(gamesNearby[i]);
+      // Grab from firebase
+      timeCol.append(startTimeList[i] + " - " + endTimeList[i]);
+      debugger
+      countCol.append(countList[i]);
+      buttonCol.attr({
+        "data-park": gamesNearby[i],
+        "data-time": startTimeList[i],
+      });
+      buttonCol.text("Select");
+      buttonCol.addClass("select");
 
-    resultsRow.append(nameCol);
-    resultsRow.append(timeCol);
-    resultsRow.append(countCol);
-    resultsRow.append(buttonCol);
-    $("#gameTable").append(resultsRow);
+      resultsRow.append(nameCol);
+      resultsRow.append(timeCol);
+      resultsRow.append(countCol);
+      resultsRow.append(buttonCol);
+      $("#gameTable").append(resultsRow);
     }
   },1000)
   
@@ -122,7 +140,6 @@ function getGamesNearby(listURL){
       console.log(response);
       var results = response.results
       gamesNearby = [];
-      debugger
       for (var i = 0; i < results.length; i++) {
         if (gameList.indexOf(results[i].name) >= 0) {
           gamesNearby.push(results[i].name);
@@ -145,11 +162,12 @@ $('#organize').on('click', function(event){
   radius = $("#miles").val();
     // Retrieve list of venues available for game
   // getParkList(queryURL);
+  debugger
   renderParkMap(coordLat,coordLng);
-  getParkList();
+  getParkList(queryURL);
 });
 
-$(".create").on('click',function(event){
+$(document).on('click','.create',function(event){
   hideDivs();
   $("#org_form").show();
   park = $(this).attr("data-park");
@@ -159,14 +177,19 @@ $(".create").on('click',function(event){
   //pull up table with input fields
   // $('.container').slideToggle("slow");
   //pull the values from the create form
-$("#submit").on('click', function(){
+$("#submit").on('click', function(event){
+  event.preventDefault();
   // Hide Create div and show confirmation-message
   hideDivs();
-  $("#org-message").show();
+  $("#org_message").show();
   name = $('#name').val().trim();
   startTime = $('#startTime').val().trim();
   endTime = $('#endTime').val().trim();
   date = $('#date').val().trim();
+  debugger
+  //push to message
+  $("#parkText").text(park);
+  $("#timeText").text(startTime);
   //push the new variables to the cloud 
   database.ref('games').push({
     name: name,
@@ -178,6 +201,11 @@ $("#submit").on('click', function(){
     date: date
   });
 });
+
+$("#return").on('click',function(event){
+  hideDivs();
+  $("#landing").show();
+})
 
 function getCoord(address) {
   $.ajax({
@@ -229,30 +257,36 @@ function getParkList(listURL) {
       console.log(response);
       var results = response.results
       for (var i = 0; i < results.length; i++) {
+
         var resultsRow = $("<tr>");
         var nameCol = $("<td>");
-        var timeCol = $("<td>");
-        var countCol = $("<td>");
+        // var timeCol = $("<td>");
+        // var countCol = $("<td>");
         var buttonCol = $("<button>")
         console.log(results[i].name);
         nameCol.append(results[i].name);
         // Grab from firebase
-        timeCol.append();
-        countCol.append();
-        buttonCol.attr("data-park",results[i].name);
+        // timeCol.append();
+        // countCol.append();
+        buttonCol.addClass("create");
+        buttonCol.attr({
+          "data-park": results[i].name,
+          "data-lat": results[i].geometry.location.lat,
+          "data-lng": results[i].geometry.location.lng
+        });
+        buttonCol.text("Create");
         // if (results[i].opening_hours !== undefined) {
         //   openP.append(results[i].opening_hours.open_now);          
         //   console.log("Opening hours: ",results[i].opening_hours.open_now);      
         // };
         resultsRow.append(nameCol);
-        resultsRow.append(timeCol);
-        resultsRow.append(countCol);
+        // resultsRow.append(timeCol);
+        // resultsRow.append(countCol);
         resultsRow.append(buttonCol);       
         $("#parkTable").append(resultsRow);   
-
         //add map markers to parkMap
-        console.log(results[i].geometry.location.lat,",",geometry.location.lng);
-        var markerCoords = {lat: geometry.location.lat, lng: geometry.location.lng};
+        console.log(results[i].geometry.location.lat,",",results[i].geometry.location.lng);
+        var markerCoords = {lat: results[i].geometry.location.lat, lng: results[i].geometry.location.lng};
         var marker = new google.maps.Marker({
           position: markerCoords,
           map: parkMap
@@ -269,7 +303,7 @@ function renderParkMap(coordLat,coordLng) {
   var coordCenter = {lat: coordLat, lng: coordLng};
   parkMap = new google.maps.Map(document.getElementById('park_map'), {
     center: coordCenter,
-    zoom: 15
+    zoom: 14
   });
   // // Create marker for each game nearby
   // for (var i = 0; i < coordsList.length; i++) {
@@ -283,7 +317,7 @@ function renderParkMap(coordLat,coordLng) {
 
 // Construct map in div #map
 function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
+    parkMap = new google.maps.Map(document.getElementById('park_map'), {
     center: {lat: -34.397, lng: 150.644},
     zoom: 15
   });
