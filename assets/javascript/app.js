@@ -111,7 +111,6 @@ function populateGameList(queryURL){
       nameCol.append(gamesNearby[i]);
       // Grab from firebase
       timeCol.append(startTimeList[i] + " - " + endTimeList[i]);
-      debugger
       countCol.append(countList[i]);
       buttonCol.attr({
         "data-park": gamesNearby[i],
@@ -162,7 +161,6 @@ $('#organize').on('click', function(event){
   radius = $("#miles").val();
     // Retrieve list of venues available for game
   // getParkList(queryURL);
-  debugger
   renderParkMap(coordLat,coordLng);
   getParkList(queryURL);
 });
@@ -171,8 +169,8 @@ $(document).on('click','.create',function(event){
   hideDivs();
   $("#org_form").show();
   park = $(this).attr("data-park");
-  parkLat = $(this).attr("data-lat");
-  parkLng = $(this).attr("data-lng");
+  parkLat = parseFloat($(this).attr("data-lat"));
+  parkLng = parseFloat($(this).attr("data-lng"));
 });
   //pull up table with input fields
   // $('.container').slideToggle("slow");
@@ -186,7 +184,6 @@ $("#submit").on('click', function(event){
   startTime = $('#startTime').val().trim();
   endTime = $('#endTime').val().trim();
   date = $('#date').val().trim();
-  debugger
   //push to message
   $("#parkText").text(park);
   $("#timeText").text(startTime);
