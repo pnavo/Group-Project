@@ -59,11 +59,17 @@ $("#landing").show();
 
 //on click of join button to search for a game after inputting the address
 $('#join').on('click', function (event){
+  if ($("#address").val().trim() !== "") {
+    address = $("#address").val().trim();
+  } else {
+    $("#searcher").prepend("<p>Please enter a valid address</p>");
+    return
+  }
   hideDivs();
   $("#join_one").show();
   //pull from "game" object in firebase when searching for a game  
   //pull the address from the input box 
-  address = $('#address').val().trim();
+  // address = $('#address').val().trim();
   getCoord(address);
   radius = $("#miles").val() * 1609;
   console.log("radius:",radius);
@@ -150,12 +156,18 @@ function getGamesNearby(listURL){
 
 //on click of organize button to receive the coordinates of the user address to get the list of parks
 $('#organize').on('click', function(event){
-  //display the form for user to fill out
+    //pull value from input box
+  if ($("#address").val().trim() !== "") {
+    address = $("#address").val().trim();
+  } else {
+    $("#searcher").prepend("<p>Please enter a valid address</p>");
+    return
+  }
   hideDivs();
+  //display the form for user to fill out
   $("#org_one").show();
   console.log("clicked");
-  //pull value from input box
-  address = $("#address").val().trim();
+
   // Retrieve coordinates for the address entered
   getCoord(address);
   radius = $("#miles").val();
