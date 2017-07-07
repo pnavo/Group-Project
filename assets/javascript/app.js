@@ -22,7 +22,8 @@ var coordLng;
 var coordinates;
 var queryURL;
 var park;
-var parkList = [];
+var gameList = [];
+var gamesNearby = [];
 // Default values
 var address = "160 Spear St, San Francisco";
 var radius = 5000;
@@ -48,27 +49,43 @@ $('#join').on('click', function (event){
   //pull the address from the input box 
   address = $('#address').val().trim();
   getCoord(address);
-  getGameList(coordLat,coordLng);
+  // radius = $("#miles").val();
+  queryURL = cors + "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + coordinates + "&radius=" + radius + "&type=park&keyword=" + gameType + "&key=AIzaSyDPEkigjm2_zBLC8qVTcHkuHtFZNjSY3Zk";
+  populateGameList(queryURL);
   //connect address and map
   renderGameMap(coordLat,coordLng);
 });
 
+function populateGameList(queryURL){
+  gameList = [];
+  database.ref().child('games').orderByChild('park').once("value", function(snapshot) {
+    console.log(snapshot.val());
+    snapshot.forEach(function(snap){
+      console.log(snap.val().park);
+      gameList.push(snap.val().park);
+    });
+  });
+  getGamesNearby(queryURL);
+  for (var i = 0; i < gamesNearby.length; i++) {
+    $("#resultsDiv").append("<p>" + gamesNearby[i] + "</p>");
+  }
+};
+
 //
-function parkList(listURL){
+function getGamesNearby(listURL){
   $.ajax({
       url: listURL,
       method: "GET"
     }).done(function(response){
       console.log(response);
       var results = response.results
-      parkList = [];
+      gamesNearby = [];
       for (var i = 0; i < results.length; i++) {
-        
-
-        parkList.push(results[i].name);
+        if (gameList.indexOf(results[i].name) >= 0) {
+          gamesNearby.push(results[i].name);
+        }
       };
-
-
+      console.log(gamesNearby);
     });   
 };
 
@@ -82,6 +99,7 @@ $('#organize').on('click', function(event){
   address = $("#address").val().trim();
   // Retrieve coordinates for the address entered
   getCoord(address);
+  radius = $("#miles").val();
     // Retrieve list of venues available for game
   // getParkList(queryURL);
   renderParkMap(coordLat,coordLng);
@@ -127,11 +145,11 @@ function getCoord(address) {
     }); 
 };
 
-function getGameList(coordLat,coordLng) {
-  database.ref('games').once("value", function (snapshot){
-    console.log(snapshot);
-  });
-};
+// function getGameList(coordLat,coordLng) {
+//   database.ref('games').once("value", function (snapshot){
+//     console.log(snapshot);
+//   });
+// };
 
 
 function renderGameMap(coordLat,coordLng) {
@@ -176,11 +194,11 @@ function renderParkMap(coordLat,coordLng) {
     center: coordCenter,
     zoom: 15
   });
-  // Pull gamesList from Firebase
-  var gamesList;
+  // Pull coordinates from Firebase
+  var coordsList;
   // Create marker for each game nearby
-  for (var i = 0; i < gamesList.length; i++) {
-    var coords = gamesList[i]
+  for (var i = 0; i < coordsList.length; i++) {
+    var coords = coordsList[i]
     var marker = new google.maps.Marker({
       position: coords,
       map: map
