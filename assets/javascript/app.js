@@ -34,6 +34,14 @@ var address = "160 Spear St, San Francisco";
 var radius = 5000;
 var gameType = "Basketball+Court";
 
+database.ref().child('games').orderByChild('park').once("value", function(snapshot) {
+  snapshot.forEach(function(snap){
+    console.log(snap.val().park);
+    gameList.push(snap.val().park);
+  });
+});
+
+
 function hideDivs() {
   $("#join_one").hide();
   $("#join_message").hide();
@@ -54,7 +62,8 @@ $('#join').on('click', function (event){
   //pull the address from the input box 
   address = $('#address').val().trim();
   getCoord(address);
-  // radius = $("#miles").val();
+  radius = $("#miles").val() * 1609;
+  console.log("radius:",radius);
   queryURL = cors + "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + coordinates + "&radius=" + radius + "&type=park&keyword=" + gameType + "&key=AIzaSyDPEkigjm2_zBLC8qVTcHkuHtFZNjSY3Zk";
   //connect address and map
   renderGameMap(coordLat,coordLng);
@@ -63,7 +72,6 @@ $('#join').on('click', function (event){
 });
 
 function populateGameList(queryURL){
-  gameList = [];
   database.ref().child('games').orderByChild('park').once("value", function(snapshot) {
     console.log(snapshot.val());
     snapshot.forEach(function(snap){
@@ -78,9 +86,10 @@ function populateGameList(queryURL){
       });
     });
   });
-  getGamesNearby(queryURL);
-
-  for (var i = 0; i < gamesNearby.length; i++) {
+  setTimeout(getGamesNearby(queryURL),500);
+  setTimeout(function(){
+    for (var i = 0; i < gamesNearby.length; i++) {
+    debugger;
     var resultsRow = $("<tr>")
     var nameCol = $("<td>");
     var timeCol = $("<td>");
@@ -98,7 +107,9 @@ function populateGameList(queryURL){
     resultsRow.append(countCol);
     resultsRow.append(buttonCol);
     $("#gameTable").append(resultsRow);
-  }
+    }
+  },1000)
+  
     console.log("Get list: Done");
 };
 
@@ -111,12 +122,13 @@ function getGamesNearby(listURL){
       console.log(response);
       var results = response.results
       gamesNearby = [];
+      debugger
       for (var i = 0; i < results.length; i++) {
         if (gameList.indexOf(results[i].name) >= 0) {
           gamesNearby.push(results[i].name);
         }
       };
-      console.log(gamesNearby);
+      console.log("Nearby games: ",gamesNearby);
     });   
 };
 
@@ -134,7 +146,7 @@ $('#organize').on('click', function(event){
     // Retrieve list of venues available for game
   // getParkList(queryURL);
   renderParkMap(coordLat,coordLng);
-  showParkList();
+  getParkList();
 });
 
 $(".create").on('click',function(event){
@@ -169,6 +181,7 @@ $("#submit").on('click', function(){
 
 function getCoord(address) {
   $.ajax({
+    async: false,
     url: cors + "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + address + "&key=AIzaSyDPEkigjm2_zBLC8qVTcHkuHtFZNjSY3Zk",
     method: "GET"
   }).done(function(response){
@@ -269,9 +282,9 @@ function renderParkMap(coordLat,coordLng) {
 };
 
 // Construct map in div #map
-// function initMap() {
-//     map = new google.maps.Map(document.getElementById('map'), {
-//     center: {lat: -34.397, lng: 150.644},
-//     zoom: 15
-//   });
-// }
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -34.397, lng: 150.644},
+    zoom: 15
+  });
+}

@@ -170,3 +170,12 @@ overflow-y: auto;
 #footer a:last-child {
   float: right;
 }
+
+table {
+  width: 100%;
+  text-align: left;
+}
+
+th {
+  width: 25%; 
+}
